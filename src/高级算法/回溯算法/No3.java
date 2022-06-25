@@ -338,10 +338,10 @@ public class No3 {
         int lremove = 0;
         int rremove = 0;
         //left和right存储的是字符串中对应左括号和右括号的下标
-        List<Integer> left = new ArrayList<Integer>();
-        List<Integer> right = new ArrayList<Integer>();
-        List<String> ans = new ArrayList<String>();
-        Set<String> cnt = new HashSet<String>();
+        List<Integer> left = new ArrayList<>();
+        List<Integer> right = new ArrayList<>();
+        List<String> ans = new ArrayList<>();
+        Set<String> cnt = new HashSet<>();
 
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) == '(') {
@@ -389,7 +389,7 @@ public class No3 {
 
     //检查合法性
     private boolean checkValid(String str, int lmask, List<Integer> left, int rmask, List<Integer> right) {
-        //pos1用于定位
+        //pos1用于定位左括号集合
         int pos1 = 0;
         int pos2 = 0;
         int cnt = 0;
