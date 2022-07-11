@@ -1,7 +1,7 @@
 package 数据结构;
 
 public class AVLTree {
-    TreeNode root;
+    public TreeNode root;
 
     public AVLTree(int[] nums){
         root = init(nums,0,nums.length-1);
@@ -11,7 +11,7 @@ public class AVLTree {
         if (left > right) {
             return null;
         }
-        int center = left + (right-left)/2;
+        int center = left + ((right-left)>>1);
         TreeNode node = new TreeNode(nums[center]);
 
         node.left = init(nums,left,center-1);
@@ -85,6 +85,7 @@ public class AVLTree {
     }
 
     //递归的寻找插入节点，插入后就进行自平衡调整
+    //为了便于找到位置后进行插入操作，将父节点作为参数传入
     private void update(TreeNode node,TreeNode parent,int val){
         if (node == null) {
             node = new TreeNode(val);
@@ -114,23 +115,25 @@ public class AVLTree {
         //判断是需要左旋还是右旋，单旋还是双旋
         if (getHeight(node.left) > getHeight(node.right)) {
             if (getHeight(node.left) > getHeight(node.left.right)) {
+                //右单旋
+                rightRotate(node,parent);
+            }else{
+                //右双旋
+                rightDRotate(node.left,node,parent);
+            }
+        }else{
+            if (getHeight(node.right.right) > getHeight(node.right.left)) {
                 //左单旋
                 leftRotate(node,parent);
             }else{
                 //左双旋
-                leftDRotate(node.left,node,parent);
-            }
-        }else{
-            if (getHeight(node.right.right) > getHeight(node.right.left)) {
-                rightRotate(node,parent);
-            }else{
-                rightDRotate(node.right,node,parent);
+                leftDRotate(node.right,node,parent);
             }
         }
     }
 
-    //左单旋
-    public void leftRotate(TreeNode parent,TreeNode gParent){
+    //右单旋
+    public void rightRotate(TreeNode parent,TreeNode gParent){
         TreeNode child = parent.left;
         parent.left = child.right;
         child.right = parent;
@@ -149,13 +152,13 @@ public class AVLTree {
         recompute(parent);
         recompute(child);
     }
-    //左双旋
-    public void leftDRotate(TreeNode node,TreeNode parent,TreeNode gParent){
-        rightRotate(node,parent);
-        leftRotate(parent,gParent);
+    //右双旋
+    public void rightDRotate(TreeNode node,TreeNode parent,TreeNode gParent){
+        leftRotate(node,parent);
+        rightRotate(parent,gParent);
     }
-    //右单旋
-    public void rightRotate(TreeNode parent,TreeNode gParent){
+    //左单旋
+    public void leftRotate(TreeNode parent,TreeNode gParent){
         TreeNode child = parent.right;
         if (gParent == null) {
             root = child;
@@ -174,10 +177,10 @@ public class AVLTree {
         recompute(parent);
         recompute(child);
     }
-    //右双旋
-    public void rightDRotate(TreeNode node,TreeNode parent,TreeNode gParent){
-        leftRotate(node,parent);
-        rightRotate(parent,gParent);
+    //左双旋
+    public void leftDRotate(TreeNode node,TreeNode parent,TreeNode gParent){
+        rightRotate(node,parent);
+        leftRotate(parent,gParent);
     }
 
     public TreeNode findLeft(TreeNode node){
@@ -215,23 +218,5 @@ public class AVLTree {
     }
     private int getCount(TreeNode node){
         return node == null ? 0 : node.count;
-    }
-}
-class TreeNode{
-    public TreeNode left;
-    public TreeNode right;
-    public int height;
-    public int count;
-    public int val;
-
-    public TreeNode(int val){
-        this(val,0,0,null,null);
-    }
-    public TreeNode(int val,int height,int count,TreeNode left,TreeNode right){
-        this.val = val;
-        this.height = height;
-        this.count = count;
-        this.left = left;
-        this.right = right;
     }
 }

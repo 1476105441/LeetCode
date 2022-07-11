@@ -1,6 +1,7 @@
 package test;
 
 import 数据结构.AVLTree;
+import 数据结构.TreeNode;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -9,8 +10,23 @@ import java.util.*;
 
 public class Test1 {
     public static void main(String[] args) {
-        double a = 5,b=28,c=11,d=49;
-        System.out.println(a*2.5*8.31*(d/c-1)*(b+273)/10000);
+        AVLTree avlTree = new AVLTree(new int[]{1,3,4,5,6,7,8});
+        avlTree.insert(9);
+        avlTree.insert(10);
+        avlTree.insert(11);
+
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode node = avlTree.root;
+        while (!stack.isEmpty()||node != null) {
+            while (node != null) {
+                stack.push(node);
+                node = node.left;
+            }
+            node = stack.pop();
+            System.out.print(node.val + " ");
+
+            node = node.right;
+        }
     }
 
     public static int transInt(int n,int num){

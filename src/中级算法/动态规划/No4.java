@@ -16,7 +16,7 @@ public class No4 {
             dp[i][0] = 0;
         }
         for (int i = 0; i < amount + 1; i++) {
-            dp[0][i] = 10000;
+            dp[0][i] = 100000;
         }
 
         for (int i = 1; i < coins.length + 1; i++) {
@@ -33,7 +33,7 @@ public class No4 {
             }
         }
 
-        if (dp[coins.length][amount] != 10000) {
+        if (dp[coins.length][amount] != 100000) {
             count = dp[coins.length][amount];
         }
         return count;
