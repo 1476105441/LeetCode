@@ -7,25 +7,14 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.lang.reflect.Constructor;
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class Test1 {
     public static void main(String[] args) {
-        AVLTree avlTree = new AVLTree(new int[]{1,3,4,5,6,7,8});
-        avlTree.insert(9);
-        avlTree.insert(10);
-        avlTree.insert(11);
+        Integer[] a = IntStream.range(0, 5).boxed().toArray(Integer[]::new);
 
-        Stack<TreeNode> stack = new Stack<>();
-        TreeNode node = avlTree.root;
-        while (!stack.isEmpty()||node != null) {
-            while (node != null) {
-                stack.push(node);
-                node = node.left;
-            }
-            node = stack.pop();
-            System.out.print(node.val + " ");
-
-            node = node.right;
+        for (Integer i : a) {
+            System.out.println(i);
         }
     }
 
