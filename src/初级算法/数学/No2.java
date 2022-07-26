@@ -114,6 +114,59 @@ public class No2 {
     //              这两个运算结果相同，但是却重复标记了
     //
     //可是在测试中线性筛并没有比埃氏筛快啊，什么情况啊
+//    public int countPrimes(int n) {
+//        //存放质数的集合
+//        int[] primes = new int[n + 1];
+//
+//        int num = 0;
+//
+//        //标记是否为质数
+//        boolean[] bp = new boolean[n + 1];
+//
+//        for (int i = 2; i < n; i++) {
+//            if (!bp[i]) {
+//                primes[num++] = i;
+//            }
+//
+//            //你放循环体里万一超出范围还会赋值，最后只能报错。而放判断语句里它会先判断是否会超出范围，一旦超出它就退出，也就不会执行赋值
+//            //好像并不是上面的说法吧，
+//            //错误写法：
+//            /*for(int j = 0;j < num ;j++) {
+//                if (i * primes[j] < n) {
+//                    bp[i * primes[j]] = true;
+//                }
+//                //  **关键点在这里**
+//                if (i % primes[j] == 0) {
+//                    break;
+//                }
+//            }*/
+//
+//            //if语句这样就可以了：
+//            //这样的话原因我就知道了，因为在溢出之前还有相乘的数大于n，如果不break的话，就还会继续循环，直到溢出
+//            /*for(int j = 0;j < num ;j++) {
+//                if (i * primes[j] < n) {
+//                    bp[i * primes[j]] = true;
+//                }else{
+//                    break;
+//                }
+//                if (i % primes[j] == 0) {
+//                    break;
+//                }
+//            }*/
+//
+//            for (int j = 0; j < num && i * primes[j] < n; j++) {
+//                bp[i * primes[j]] = true;
+//                //  **关键点在这里**
+//                if (i % primes[j] == 0) {
+//                    break;
+//                }
+//            }
+//        }
+//
+//        return num;
+//    }
+
+
     public int countPrimes(int n) {
         //存放质数的集合
         int[] primes = new int[n + 1];
@@ -127,33 +180,6 @@ public class No2 {
             if (!bp[i]) {
                 primes[num++] = i;
             }
-
-            //你放循环体里万一超出范围还会赋值，最后只能报错。而放判断语句里它会先判断是否会超出范围，一旦超出它就退出，也就不会执行赋值
-            //好像并不是上面的说法吧，
-            //错误写法：
-            /*for(int j = 0;j < num ;j++) {
-                if (i * primes[j] < n) {
-                    bp[i * primes[j]] = true;
-                }
-                //  **关键点在这里**
-                if (i % primes[j] == 0) {
-                    break;
-                }
-            }*/
-
-            //if语句这样就可以了：
-            //这样的话原因我就知道了，因为在溢出之前还有相乘的数大于n，如果不break的话，就还会继续循环，直到溢出
-            /*for(int j = 0;j < num ;j++) {
-                if (i * primes[j] < n) {
-                    bp[i * primes[j]] = true;
-                }else{
-                    break;
-                }
-                if (i % primes[j] == 0) {
-                    break;
-                }
-            }*/
-
             for (int j = 0; j < num && i * primes[j] < n; j++) {
                 bp[i * primes[j]] = true;
                 //  **关键点在这里**

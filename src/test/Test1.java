@@ -11,11 +11,13 @@ import java.util.stream.IntStream;
 
 public class Test1 {
     public static void main(String[] args) {
-        Integer[] a = IntStream.range(0, 5).boxed().toArray(Integer[]::new);
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
 
-        for (Integer i : a) {
-            System.out.println(i);
-        }
+        list.remove(0);
+        System.out.println(list.size());
+        System.out.println(list.get(0));
     }
 
     public static int transInt(int n,int num){
