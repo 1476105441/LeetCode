@@ -1,23 +1,39 @@
 package test;
 
-import 数据结构.AVLTree;
-import 数据结构.TreeNode;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.lang.reflect.Constructor;
-import java.util.*;
-import java.util.stream.IntStream;
-
 public class Test1 {
-    public static void main(String[] args) {
-        List<Integer> list = new ArrayList<>();
-        list.add(1);
-        list.add(2);
+    //多次遍历法，时间复杂度还是O(n)
+    public static int firstMissingPositive(int[] nums) {
+        int n = nums.length,res = n+1;
 
-        list.remove(0);
-        System.out.println(list.size());
-        System.out.println(list.get(0));
+
+        for(int i = 0;i < n;i++){
+            if(nums[i] < 0){
+                nums[i] = 0;
+            }
+        }
+
+
+        for(int i = 0;i < n;i++){
+            int t1 = i;
+            while(nums[t1] > 0 && nums[t1] < n+1){
+                int temp1 = nums[t1],temp2 = nums[temp1-1];
+                nums[t1] = 0;
+                nums[temp1-1] = -1;
+                t1 = temp2;
+            }
+        }
+
+        for(int i = 0;i < n;i++){
+            if(nums[i] >= 0){
+                res = i+1;
+                break;
+            }
+        }
+
+        return res;
+    }
+
+    public static void main(String[] args) {
     }
 
     public static int transInt(int n,int num){
