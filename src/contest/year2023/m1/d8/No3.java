@@ -118,7 +118,7 @@ public class No3 {
         }
         for (int i = 0; i < 26; i++) {
             for (int j = 0; j < 26; j++) {
-                if (!(count1[i] > 0 && count2[i] > 0)) {
+                if (!(count1[i] > 0 && count2[j] > 0)) {
                     continue;
                 }
                 count1[i]--;
