@@ -2,6 +2,7 @@ package contest.year2023.m1.d8;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class No4 {
@@ -14,7 +15,7 @@ public class No4 {
     public int findCrossingTime(int n, int k, int[][] time) {
         int num = time.length;
         this.time = time;
-        Queue<int[]> lq  = new LinkedList<>(),rq = new LinkedList<>();
+        PriorityQueue<int[]> lq  = new PriorityQueue<>((x,y) -> x[0] - y[0]),rq = new PriorityQueue<>((x,y) -> x[0] - y[0]);
         int[] left = new int[num],right = new int[num];
         int l = 0,r = 0; //分别维护几个最小堆的结构
         for (int i = 0; i < num; i++) {
@@ -22,12 +23,14 @@ public class No4 {
             update(left,l);
             l++;
         }
-        int nowTime = 0,lc = l,rc = 0;
+        int nowTime = 0,lc = l;
         while (n > 0) {
             //检查当前的两个等待队列
             int[] head;
-            while (!rq.isEmpty() && ((head = rq.peek())[0] <= nowTime || lc == 0)) {
-                if (lc == 0) {
+            boolean flag = lc == 0;
+            while (!rq.isEmpty() && ((head = rq.peek())[0] <= nowTime || flag)) {
+                if (flag) {
+                    flag = false;
                     nowTime = head[0];
                 }
                 rq.poll();
@@ -35,8 +38,10 @@ public class No4 {
                 update(right,r);
                 r++;
             }
-            while (!lq.isEmpty() && ((head = lq.peek())[0] <= nowTime || r == 0)) {
-                if (r == 0) {
+            flag = r == 0;
+            while (!lq.isEmpty() && ((head = lq.peek())[0] <= nowTime || flag)) {
+                if (flag) {
+                    flag = false;
                     nowTime = head[0];
                 }
                 lq.poll();
@@ -51,7 +56,7 @@ public class No4 {
                 r--;
                 lc++;
                 shift(right, 0, r);
-                lq.add(new int[]{nowTime + time[loc][2] + time[loc][3], loc});
+                lq.offer(new int[]{nowTime + time[loc][2] + time[loc][3], loc});
                 //跳到桥的下一个空闲时间
                 nowTime += time[loc][2];
             } else {
@@ -63,7 +68,7 @@ public class No4 {
                 l--;
                 lc--;
                 shift(left,0,l);
-                rq.add(new int[]{nowTime + time[loc][0] + time[loc][1], loc});
+                rq.offer(new int[]{nowTime + time[loc][0] + time[loc][1], loc});
                 //跳到桥的下一个空闲时间
                 nowTime += time[loc][0];
             }
@@ -95,7 +100,7 @@ public class No4 {
 
     public static void main(String[] args) {
         No4 no4 = new No4();
-        no4.findCrossingTime(1,3,new int[][]{new int[]{1,1,2,3},new int[]{1,1,3,1},new int[]{1,1,4,1}});
+        System.out.println(no4.findCrossingTime(1, 3, new int[][]{new int[]{1, 1, 2, 3}, new int[]{1, 1, 3, 1}, new int[]{1, 1, 4, 1}}));
     }
 
     //判断工人i是否效率高于工人j
