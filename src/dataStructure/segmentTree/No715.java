@@ -1,4 +1,4 @@
-package practice;
+package dataStructure.segmentTree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -163,6 +163,7 @@ class RangeModule {
     }
 }*/
 
+//解法二：维护有序集合
 class RangeModule {
     //集合中只存放存在的区间，也就是说开区间不存入
     List<int[]> range;

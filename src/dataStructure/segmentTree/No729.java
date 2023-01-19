@@ -1,4 +1,4 @@
-package practice;
+package dataStructure.segmentTree;
 
 public class No729 {
     /**
