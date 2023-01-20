@@ -105,6 +105,7 @@ class NumArray {
 }*/
 
 //解法三：树状数组，72ms
+/*
 class NumArray {
     int[] nums, tree;
     int n;
@@ -146,5 +147,58 @@ class NumArray {
             index -= (index & (-index));
         }
         return sum;
+    }
+}*/
+
+//解法四：分块处理，成功，95ms
+class NumArray {
+    int[] sum,nums;
+    int size;
+    public NumArray(int[] nums) {
+        int n = nums.length;
+        this.nums = nums;
+        size = (int) Math.sqrt(n);
+        int m = n / size;
+        if (n % size != 0) {
+            m++;
+        }
+        sum = new int[m];
+        int index = 0;
+        for (int i = 0; i < m; i++) {
+            int temp = 0;
+            for (int j = 0;index < n && j < size; j++) {
+                temp += nums[index];
+                index++;
+            }
+            sum[i] = temp;
+        }
+    }
+
+    public void update(int index, int val) {
+        int dif = val - nums[index];
+        nums[index] = val;
+        sum[index / size] += dif;
+    }
+
+    public int sumRange(int left, int right) {
+        int l = left / size,r = right / size;
+        int res = 0;
+        if (l == r) {
+            for (int i = left; i <= right; i++) {
+                res += nums[i];
+            }
+            return res;
+        }
+        int limit1 = (l+1) * size,limit2 = r * size;
+        for (int i = l+1; i < r; i++) {
+            res += sum[i];
+        }
+        for (int i = left; i < limit1 && i < nums.length; i++) {
+            res += nums[i];
+        }
+        for (int i = limit2; i <= right && i < nums.length; i++) {
+            res += nums[i];
+        }
+        return res;
     }
 }
