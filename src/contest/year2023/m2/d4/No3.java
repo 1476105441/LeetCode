@@ -84,9 +84,11 @@ public class No3 {
      */
     public int maximizeWin(int[] prizePositions, int k) {
         int n = prizePositions.length;
+        //维护一个数值数组，表示当前下标i之前的最大满足条件的窗口值
         int[] prefix = new int[n+1];
         int l = 0,res = 0;
         for (int r = 0; r < n; r++) {
+            //维护双指针，使双指针的长度在k及以内
             while (prizePositions[r] - prizePositions[l] > k) {
                 l++;
             }
