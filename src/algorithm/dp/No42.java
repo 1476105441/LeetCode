@@ -46,12 +46,17 @@ public class No42 {
     }*/
 
     //解法三：双指针，0ms
+    //思想：只移动较小的一端，先忽略中间元素，元素能接的雨水数取决于两端的大小
     public int trap(int[] height) {
         int n = height.length,res = 0;
+        //双指针，移动策略导致了没有移动的一端一定是全局最大的一端
         int l = 0,r = n-1,lm = height[l],rm = height[r];
         while(l < r){
             if(height[l] >= height[r]){
                 res += rm - height[r];
+                //rm一定比lm小，有两种情况：
+                //1、上回合r移动过，那么rm == height[r]
+                //2、上回合r没有移动，l移动过，那么l找到了一个比r的值更大的值
                 r--;
                 rm = Math.max(rm,height[r]);
             } else {
