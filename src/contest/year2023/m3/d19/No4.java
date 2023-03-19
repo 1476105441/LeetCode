@@ -39,13 +39,14 @@ public class No4 {
     }*/
 
 
-    public int findSmallestInteger(int[] nums, int value) {
+    /*public int findSmallestInteger(int[] nums, int value) {
         int n = nums.length;
         int[] set = new int[value+1];
         for(int i=0;i < n;i++){
             int loc = nums[i] % value + value;
             set[loc%value]++;
         }
+        //检查总共出现了多少组
         int min = 1000000001;
         for(int i=0;i < value;i++){
             if(set[i] < min) min = set[i];
@@ -53,6 +54,22 @@ public class No4 {
         int res = min * value;
         for(int i=0;i < value;i++){
             if(set[i]-min <= 0) break;
+            res++;
+        }
+        return res;
+    }*/
+
+    //简单写法
+    public int findSmallestInteger(int[] nums, int value) {
+        int n = nums.length;
+        int[] set = new int[value+1];
+        for(int i=0;i < n;i++){
+            int loc = nums[i] % value + value;
+            set[loc%value]++;
+        }
+        int res = 0;
+        while(set[res % value] > 0){
+            set[res%value]--;
             res++;
         }
         return res;
