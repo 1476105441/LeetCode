@@ -66,7 +66,7 @@ public class No3 {
     }*/
 
     //本质上，只要含有相同质因数的两个数字，就必须放到同一个区间内
-    public int findValidSplit(int[] nums) {
+    /*public int findValidSplit(int[] nums) {
         int n = nums.length;
         //left的key为质因数，value为最早出现质因数的下标
         Map<Integer,Integer> left = new HashMap<>();
@@ -101,6 +101,37 @@ public class No3 {
             if(l > max){
                 return max;
             }
+            max = Math.max(max,right[l]);
+        }
+        return -1;
+    }*/
+
+    //质因数分解+遍历
+    //记录每个和当前质因数相同的最右边的下标
+    public int findValidSplit(int[] nums) {
+        int n = nums.length;
+        Map<Integer,Integer> map = new HashMap<>(n);
+        int[] right = new int[n];
+        for(int i = 0;i < n;i++){
+            int val = nums[i];
+            for(int j = 2;j * j <= val;j++){
+                if(val % j == 0){
+                    Integer loc = map.get(j);
+                    if(loc == null) map.put(j,i);
+                    else right[loc] = i;
+                    for(val /= j;val % j == 0;val /= j){}
+                }
+            }
+            if(val != 1){
+                Integer loc = map.get(val);
+                if(loc == null) map.put(val,i);
+                else right[loc] = i;
+            }
+        }
+        int l = 0,max = 0;
+        for( ;l < n;l++){
+            //已经走到拥有最右边质因数的右边，说明max是安全的位置（满足题目条件）
+            if(l > max) return max;
             max = Math.max(max,right[l]);
         }
         return -1;
