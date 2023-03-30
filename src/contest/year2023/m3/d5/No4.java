@@ -1,5 +1,7 @@
 package contest.year2023.m3.d5;
 
+import java.util.Arrays;
+
 public class No4 {
     //失败
     /*public int waysToReachTarget(int target, int[][] types) {

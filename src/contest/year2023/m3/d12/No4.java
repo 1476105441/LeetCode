@@ -225,10 +225,10 @@ public class No4 {
     }*/
 
     //解法三：单调栈思想：先排序，再使用栈存储运行的区间
-    public int findMinimumTime(int[][] tasks) {
-        int n = tasks.length,res = 0;
+    /*public int findMinimumTime(int[][] tasks) {
+        int n = tasks.length;
         Arrays.sort(tasks,(x,y) -> x[1]-y[1]);//仍然是按照右端点进行排序
-        List<int[]> stack = new ArrayList<>();//存储三元组：左端点、右端点、累计值
+        List<int[]> stack = new ArrayList<>();//存储三元组：左端点、右端点、累计值（到当前区间为止所拥有的节点数量）
         stack.add(new int[]{-2,-2,0});//添加特殊端点，方便处理
         for(int i = 0;i < n;i++){
             int start = tasks[i][0],end = tasks[i][1],val = tasks[i][2];
@@ -261,16 +261,123 @@ public class No4 {
             }
         }
         return stack.get(res);
+    }*/
+
+
+    //重写方法一，暴力解法
+    /*public int findMinimumTime(int[][] tasks) {
+        int n = tasks.length,res = 0;
+        //按照结束节点排序，因为结束节点在后续还是增长的，后续的区间有可能还和结束
+        //节点重合，如果按开始节点排序的话，后持的区间更大的概率不会重合
+        Arrays.sort(tasks,(x,y) -> x[1]-y[1]);
+        boolean[] set = new boolean[2001];
+        for(int i=0;i < n;i++){
+            int s = tasks[i][0],e = tasks[i][1],c = tasks[i][2];
+            for(int j=e;j >= s && c > 0;j--){
+                if(set[j]) c--;
+            }
+            for(int j=e;j >= s && c > 0;j--){
+                if(!set[j]){
+                    c--;
+                    set[j] = true;
+                    res++;
+                }
+            }
+        }
+        return res;
+    }*/
+
+    //重写线段树，为什么效率很低，18ms？
+    /*int[][] nums;//第一个元素是区间内拥有的节点个数，第二个元素是节点是否被更新
+    int val;
+    //使用线段树维护区间中拥有的时间个数，如果不足的话，优先更新右节点
+    public int findMinimumTime(int[][] tasks) {
+        int n = tasks.length,mx;
+        Arrays.sort(tasks,(x,y) -> x[1]-y[1]);
+        //得出最大时间才对
+        mx = tasks[n-1][1];
+        nums = new int[mx*4][2];
+        val = 0;
+        for(int i=0;i < n;i++){
+            int l = tasks[i][0],r = tasks[i][1],v = tasks[i][2];
+            val = v-query(1,1,mx,l,r);
+            if(v > 0){
+                update(1,1,mx,l,r);
+            }
+        }
+        return nums[1][0];
     }
+    private void pushDown(int loc,int s,int e){
+        nums[loc][0] = e-s+1;
+        nums[loc][1] = 1;
+    }
+    private void push(int loc,int s,int c,int e){
+        if(nums[loc][1] == 1){
+            nums[loc][1] = 0;
+            pushDown(loc << 1,s,c);
+            pushDown((loc << 1) + 1,c+1,e);
+        }
+    }
+    private void update(int loc,int s,int e,int l,int r){
+        int len = e-s+1;
+        if(nums[loc][0] == len) return;
+        if(l <= s && e <= r && len - nums[loc][0] <= val){
+            val -= len - nums[loc][0];
+            nums[loc][0] = len;
+            nums[loc][1] = 1;
+            return;
+        }
+        int c = s + ((e-s) >> 1);
+        push(loc,s,c,e);
+        if(c < r) update((loc << 1) + 1,c+1,e,l,r);
+        if(val > 0 && c >= l) update(loc << 1,s,c,l,r);
+        //更新当前节点的值
+        nums[loc][0] = nums[loc<<1][0] + nums[(loc<<1) + 1][0];
+    }
+    private int query(int loc,int s,int e,int l,int r){
+        if(l <= s && e <= r){
+            return nums[loc][0];
+        }
+        int c = s + ((e-s) >> 1),res = 0;
+        push(loc,s,c,e);
+        if(c >= l) res += query(loc<<1,s,c,l,r);
+        if(c < r) res += query((loc<<1)+1,c+1,e,l,r);
+        return res;
+    }*/
 
-
-
-
-
-
-
-
-
+    //维护栈+二分
+    public int findMinimumTime(int[][] tasks) {
+        int n = tasks.length;
+        List<int[]> stack = new ArrayList<>(n);
+        stack.add(new int[]{-2,-2,0});
+        Arrays.sort(tasks,(x,y) -> x[1]-y[1]);
+        for(int i=0;i < n;i++){
+            int s = tasks[i][0],e = tasks[i][1],v = tasks[i][2];
+            int[] tmp = find(stack,s);
+            v -= stack.get(stack.size()-1)[2] - tmp[2];
+            if(s <= tmp[1]){
+                v -= tmp[1]-s+1;
+            }
+            if(v <= 0) continue;
+            while(e-stack.get(stack.size()-1)[1] <= v){
+                tmp = stack.remove(stack.size()-1);
+                v += tmp[1]-tmp[0]+1;
+            }
+            stack.add(new int[]{e+1-v,e,v+stack.get(stack.size()-1)[2]});
+        }
+        return stack.get(stack.size()-1)[2];
+    }
+    private int[] find(List<int[]> stack,int val){
+        int l = 0,r = stack.size()-1,res = 0;
+        while(l <= r){
+            int c = l + ((r-l) >> 1);
+            if(stack.get(c)[0] <= val){
+                res = c;
+                l = c+1;
+            } else r = c-1;
+        }
+        return stack.get(res);
+    }
 
 
 
