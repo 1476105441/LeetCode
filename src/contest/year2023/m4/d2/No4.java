@@ -53,7 +53,43 @@ public class No4 {
     //2、推算出当区间变动时，对称点的变动，如果区间向左移动，l需要减一，r也是如此，所以对称点需要减2；同理向右移动对称点需要加2
     //3、讨论边界问题
     public int[] minReverseOperations(int n, int p, int[] banned, int k) {
-        TreeSet<Integer> s = new TreeSet<>();
-        return null;
+        boolean[] set = new boolean[n];
+        for(int i = 0;i < banned.length;i++){
+            set[banned[i]] = true;
+        }
+        set[p] = true;
+        int[] res = new int[n];
+        Arrays.fill(res,-1);
+        TreeSet<Integer>[] nodes = new TreeSet[2];
+        nodes[0] = new TreeSet<Integer>();
+        nodes[1] = new TreeSet<Integer>();
+        nodes[0].add(n);
+        nodes[1].add(n);
+        for(int i=0;i < n;i++){
+            if(!set[i]){
+                nodes[i%2].add(i);
+            }
+        }
+        res[p] = 0;
+        Queue<Integer> queue = new ArrayDeque<>();
+        queue.add(p);
+        int dep = 1;
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            while(size > 0){
+                int loc = queue.poll();
+                int min = Math.max(loc-k+1,k-1-loc);
+                int max = Math.min(loc+k-1,2*n-k-loc-1);
+                TreeSet<Integer> treeSet = nodes[min % 2];
+                for(int i=treeSet.ceiling(min);i <= max;i=treeSet.ceiling(min)){
+                    res[i] = dep;
+                    queue.add(i);
+                    treeSet.remove(i);
+                }
+                size--;
+            }
+            dep++;
+        }
+        return res;
     }
 }
