@@ -7,7 +7,7 @@ public class No3 {
 
     //一般这种找出最大值的最小值的题目，可以使用二分法解决
     //或者贪心
-    public int minimizeMax(int[] nums, int p) {
+    /*public int minimizeMax(int[] nums, int p) {
         if(p == 0){
             return 0;
         }
@@ -36,5 +36,31 @@ public class No3 {
             }
         }
         return p == 0;
+    }*/
+
+    //重写
+    public int minimizeMax(int[] nums, int p) {
+        int n = nums.length;
+        Arrays.sort(nums);
+        int l=0, r=1000000000;
+        while(l < r) {
+            int c = l + ((r-l) >> 1);
+            if(check(c,nums,p)){
+                r = c;
+            } else {
+                l = c+1;
+            }
+        }
+        return l;
+    }
+    private boolean check(int val, int[] nums, int p) {
+        for(int i=0; i < nums.length-1; i++) {
+            if(nums[i+1] - nums[i] <= val) {
+                p--;
+                i++;
+                if(p == 0) return true;
+            }
+        }
+        return p <= 0;
     }
 }
