@@ -40,7 +40,6 @@ public class No3 {
 
     //重写
     public int minimizeMax(int[] nums, int p) {
-        int n = nums.length;
         Arrays.sort(nums);
         int l=0, r=1000000000;
         while(l < r) {
