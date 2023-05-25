@@ -1,5 +1,7 @@
 package contest.year2023.m4.d15;
 
+import java.util.Arrays;
+
 /**
  * 2642.设计可以求最短路径的图类
  *
@@ -200,4 +202,59 @@ public class No4 {
             return vals[node1][node2] >= Integer.MAX_VALUE/3 ? -1 : vals[node1][node2];
         }
     }*/
+
+    class Graph {
+
+        int[][] vals;
+        int n;
+
+        public Graph(int n, int[][] edges) {
+            this.n = n;
+            vals = new int[n][n];
+            for(int i=0;i < n;i++){
+                Arrays.fill(vals[i],Integer.MAX_VALUE/3);
+                vals[i][i] = 0;
+            }
+            for(int i=0;i < edges.length;i++){
+                int x = edges[i][0],y = edges[i][1],v = edges[i][2];
+                vals[x][y] = v;
+            }
+        }
+
+        public void addEdge(int[] edge) {
+            vals[edge[0]][edge[1]] = edge[2];
+        }
+
+        public int shortestPath(int node1, int node2) {
+            int[] temp = new int[n];
+            boolean[] set = new boolean[n];
+            set[node1] = true;
+            for(int i=0;i < n;i++) {
+                temp[i] = vals[node1][i];
+            }
+            for(;;) {
+                int min = Integer.MAX_VALUE,minL = -1;
+                for(int i=0;i < n;i++) {
+                    if(!set[i] && min > temp[i]) {
+                        min = temp[i];
+                        minL = i;
+                    }
+                }
+                if(minL == -1) {
+                    int res = temp[node2];
+                    return res >= Integer.MAX_VALUE/3 ? -1 : res;
+                }
+                if(minL == node2){
+                    int res = temp[node2];
+                    return res >= Integer.MAX_VALUE/3 ? -1 : res;
+                }
+                set[minL] = true;
+                for(int i=0;i < n;i++){
+                    if(!set[i]){
+                        temp[i] = Math.min(temp[i],vals[minL][i]+min);
+                    }
+                }
+            }
+        }
+    }
 }
