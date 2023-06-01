@@ -94,4 +94,66 @@ public class No4 {
             depth++;
         }
     }*/
+
+
+    //成功，9ms
+    //dp解法，对于一个结点，有两种可能的选择：选择减半或者不减半，如何选择取决于相邻的节点
+    //将题目转为不变的值：计算出每个点经过的次数，将其权值转换为原本的值乘以经过的次数
+    List<List<Integer>> e;
+    int[] count;
+    int n;
+    public int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
+        count = new int[n];
+        this.n = n;
+        e = new ArrayList<>(n);
+        for(int i=0; i < n; i++) {
+            e.add(new ArrayList<>());
+        }
+        for(int i=0;i < edges.length; i++) {
+            int x = edges[i][0], y = edges[i][1];
+            e.get(x).add(y);
+            e.get(y).add(x);
+        }
+        boolean[] set = new boolean[n];
+        for(int i=0;i < trips.length; i++) {
+            dfs(trips[i][0],trips[i][1],set);
+        }
+        for(int i=0; i < n; i++) {
+            //System.out.print(count[i]+" ");
+            count[i] = count[i] * price[i];
+        }
+        int[] tmp = dp(0,set);
+        return Math.min(tmp[0],tmp[1]);
+    }
+    private int[] dp(int idx, boolean[] set) {
+        set[idx] = true;
+        int sum0 = count[idx],sum1 = sum0 / 2;
+        for(Integer next : e.get(idx)) {
+            if(!set[next]) {
+                int[] tmp = dp(next,set);
+                sum0 += Math.min(tmp[0],tmp[1]);
+                sum1 += tmp[0];
+            }
+        }
+        set[idx] = false;
+        return new int[]{sum0,sum1};
+    }
+    private boolean dfs(int idx, int to, boolean[] set) {
+        if(idx == to) {
+            count[idx]++;
+            return true;
+        }
+        set[idx] = true;
+        for(Integer next : e.get(idx)) {
+            if(!set[next]) {
+                if(dfs(next,to,set)) {
+                    count[idx]++;
+                    set[idx] = false;
+                    return true;
+                }
+            }
+        }
+        set[idx] = false;
+        return false;
+    }
 }
