@@ -99,7 +99,7 @@ public class No4 {
     //成功，9ms
     //dp解法，对于一个结点，有两种可能的选择：选择减半或者不减半，如何选择取决于相邻的节点
     //将题目转为不变的值：计算出每个点经过的次数，将其权值转换为原本的值乘以经过的次数
-    List<List<Integer>> e;
+    /*List<List<Integer>> e;
     int[] count;
     int n;
     public int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
@@ -155,5 +155,89 @@ public class No4 {
         }
         set[idx] = false;
         return false;
+    }*/
+
+    //解法二：Tarjan离线LCA（最近公共祖先）+树上差分
+    //解法二：并查集+树上差分
+    List<List<Integer>> e,t;
+    int[] price,father,vis,diff;
+    public int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
+        e = new ArrayList<>();
+        t = new ArrayList<>();
+        this.price = price;
+        father = new int[n];
+        diff = new int[n];
+        vis = new int[n];
+        pa = new int[n];
+        for(int i=0;i < n;i++) {
+            e.add(new ArrayList<>());
+            t.add(new ArrayList<>());
+            pa[i] = i;
+        }
+        for(int i=0;i < edges.length;i++) {
+            int x = edges[i][0], y = edges[i][1];
+            e.get(x).add(y);
+            e.get(y).add(x);
+        }
+        for(int i=0;i < trips.length;i++) {
+            int x = trips[i][0], y = trips[i][1];
+            t.get(x).add(y);
+            if(x != y) {
+                t.get(y).add(x);
+            }
+        }
+        tarjan(0,-1);
+
+        int[] tmp = dfs(0,-1);
+        return Math.min(tmp[0],tmp[1]);
+    }
+    int[] pa; //并查集，用于快速找到节点的lca
+
+    private int find(int idx) {
+        if(pa[idx] != idx) {
+            pa[idx] = find(pa[idx]);
+        }
+        return pa[idx];
+    }
+
+    //vis的值：0表示没有遍历过，1表示正在遍历，2表示已经遍历完成
+    private void tarjan(int idx, int p) {
+        father[idx] = p;
+        vis[idx] = 1;
+        for(Integer next : e.get(idx)) {
+            if(vis[next] == 0) {
+                tarjan(next,idx);
+                pa[next] = idx;
+            }
+        }
+        for(Integer to : t.get(idx)) {
+            if(to == idx || vis[to] == 2) {
+                diff[idx]++;
+                diff[to]++;
+                int lca = find(to);
+                diff[lca]--;
+                int f = father[lca];
+                if(f >= 0) {
+                    diff[f]--;
+                }
+            }
+        }
+        vis[idx] = 2;
+    }
+
+    //返回值为一个携带三个参数的数组，第一个元素是不打折的值，第二个元素是打折的值，第三个参数是diff值
+    private int[] dfs(int idx, int p) {
+        int d = diff[idx], v0 = 0, v1 = 0;
+        for(Integer next : e.get(idx)) {
+            if(next != p) {
+                int[] tmp = dfs(next,idx);
+                d += tmp[2];
+                v0 += Math.min(tmp[0],tmp[1]);
+                v1 += tmp[0];
+            }
+        }
+        v0 += price[idx] * d;
+        v1 += price[idx] * d / 2;
+        return new int[]{v0,v1,d};
     }
 }
