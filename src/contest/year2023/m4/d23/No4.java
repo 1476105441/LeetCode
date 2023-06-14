@@ -7,7 +7,8 @@ package contest.year2023.m4.d23;
 public class No4 {
     //无法变成1的情况：所有的元素都有最小公约数
     //成功，1ms
-    public int minOperations(int[] nums) {
+    //成功是成功了，但是写的太复杂，将近100行代码
+    /*public int minOperations(int[] nums) {
         int n = nums.length;
         int c = 0;
         for(int i=0;i < n;i++) {
@@ -81,7 +82,7 @@ public class No4 {
             c++;
         }
         return -1;
-    }
+    }*/
     private int gcd(int x, int y) {
         while(y != 0) {
             int tmp = y;
@@ -89,5 +90,37 @@ public class No4 {
             x = tmp;
         }
         return x;
+    }
+
+    //仔细思考，其实本题只有三种情况：
+    //1、nums中有值为1的元素
+    //2、没有值为1的元素，但是数组中的元素经过gcd之后可以得到1
+    //3、数组中的元素gcd之后无法得到1
+    public int minOperations(int[] nums) {
+        int tmp = 0, c = 0, n = nums.length;
+        for(int i=0;i < n;i++) {
+            tmp = gcd(tmp,nums[i]);
+            if(nums[i] == 1) {
+                c++;
+            }
+        }
+        if(tmp > 1) {
+            return -1;
+        }
+        if(c > 0) {
+            return n-c;
+        }
+        int min = Integer.MAX_VALUE;
+        for(int i=0;i < n;i++) {
+            int t = 0;
+            for(int j=i;j < n;j++) {
+                t = gcd(t,nums[j]);
+                if(t == 1) {
+                    min = Math.min(j-i+1,min);
+                    break;
+                }
+            }
+        }
+        return min+n-2;
     }
 }
