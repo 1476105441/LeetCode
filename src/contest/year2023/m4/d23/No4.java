@@ -1,5 +1,8 @@
 package contest.year2023.m4.d23;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 2654. 使数组所有元素变成 1 的最少操作次数
  * @author wjs 2023/6/12
@@ -83,20 +86,20 @@ public class No4 {
         }
         return -1;
     }*/
-    private int gcd(int x, int y) {
+    /*private int gcd(int x, int y) {
         while(y != 0) {
             int tmp = y;
             y = x % y;
             x = tmp;
         }
         return x;
-    }
+    }*/
 
     //仔细思考，其实本题只有三种情况：
     //1、nums中有值为1的元素
     //2、没有值为1的元素，但是数组中的元素经过gcd之后可以得到1
     //3、数组中的元素gcd之后无法得到1
-    public int minOperations(int[] nums) {
+    /*public int minOperations(int[] nums) {
         int tmp = 0, c = 0, n = nums.length;
         for(int i=0;i < n;i++) {
             tmp = gcd(tmp,nums[i]);
@@ -122,5 +125,88 @@ public class No4 {
             }
         }
         return min+n-2;
+    }*/
+
+    //时隔许久，重新写一遍
+    /*public int minOperations(int[] nums) {
+        int n = nums.length, tmp = 0, c = 0;
+        for(int i=0;i < n;i++) {
+            if(nums[i] == 1) {
+                c++;
+            }
+            tmp = gcd(tmp,nums[i]);
+        }
+        if(c > 0) {
+            return n-c;
+        }
+        if(tmp != 1) {
+            return -1;
+        }
+        int res = Integer.MAX_VALUE;
+        for(int i=0;i < n;i++) {
+            int ct = 0;
+            for(int j=i;j < n;j++) {
+                ct = gcd(ct,nums[j]);
+                if(ct == 1) {
+                    res = Math.min(res,j-i);
+                    break;
+                }
+            }
+        }
+        return res + n - 1;
+    }
+    private int gcd(int x, int y) {
+        while(y != 0) {
+            int tmp = y;
+            y = x % y;
+            x = tmp;
+        }
+        return x;
+    }*/
+
+    //另一种解法，在数组的数据量比较大时效率更佳
+    //时间复杂度分析我没看懂，不过可以肯定的是，
+    //这种写法减少了枚举的范围
+    public int minOperations(int[] nums) {
+        int n = nums.length, tmp = 0, c = 0;
+        for(int i=0;i < n;i++) {
+            if(nums[i] == 1) {
+                c++;
+            }
+            tmp = gcd(tmp,nums[i]);
+        }
+        if(c > 0) {
+            return n-c;
+        }
+        if(tmp != 1) {
+            return -1;
+        }
+        List<int[]> list = new ArrayList<>();
+        int res = Integer.MAX_VALUE;
+        for(int i=0;i < n;i++) {
+            list.add(new int[]{nums[i],i});
+            int j = 0;
+            for(int[] t : list) {
+                t[0] = gcd(t[0],nums[i]);
+                if(list.get(j)[0] == t[0]) {
+                    list.get(j)[1] = t[1];
+                } else {
+                    j++;
+                    list.set(j,t);
+                }
+            }
+            if(list.get(0)[0] == 1) {
+                res = Math.min(res,i-list.get(0)[1]);
+            }
+        }
+        return res + n - 1;
+    }
+    private int gcd(int x, int y) {
+        while(y != 0) {
+            int tmp = y;
+            y = x % y;
+            x = tmp;
+        }
+        return x;
     }
 }
