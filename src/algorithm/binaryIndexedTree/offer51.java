@@ -8,7 +8,8 @@ import java.util.Arrays;
  * @author wjs 2023/6/27
  */
 public class offer51 {
-    int[] c;
+    //解法一：树状数组
+    /*int[] c;
     Integer[] tmp;
     public int reversePairs(int[] nums) {
         int n = nums.length;
@@ -66,5 +67,50 @@ public class offer51 {
             loc -= lowbit(loc);
         }
         return res;
+    }*/
+
+    //解法二：归并排序
+    int[] vals,temp;
+    int res;
+    public int reversePairs(int[] nums) {
+        int n = nums.length;
+        vals = nums;
+        temp = new int[n];
+        mergeSort(0,n-1);
+        return res;
+    }
+    private void mergeSort(int l, int r) {
+        if(l >= r) {
+            return;
+        }
+        int c = l + ((r-l) >> 1);
+        mergeSort(l,c);
+        mergeSort(c+1,r);
+        int i = l, j = c+1,k = l;
+        while(i <= c && j <= r) {
+            if(vals[i] > vals[j]) {
+                temp[k] = vals[j];
+                j++;
+            } else {
+                res += j - c - 1;
+                temp[k] = vals[i];
+                i++;
+            }
+            k++;
+        }
+        while(i <= c) {
+            temp[k] = vals[i];
+            i++;
+            k++;
+            res += r - c;
+        }
+        while(j <= r) {
+            temp[k] = vals[j];
+            j++;
+            k++;
+        }
+        for(int loc=l; loc <= r;loc++) {
+            vals[loc] = temp[loc];
+        }
     }
 }
