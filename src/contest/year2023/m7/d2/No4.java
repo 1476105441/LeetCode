@@ -65,7 +65,7 @@ public class No4 {
     }*/
 
     //解法一：暴力，9ms
-    public int sumImbalanceNumbers(int[] nums) {
+    /*public int sumImbalanceNumbers(int[] nums) {
         int n = nums.length;
         int res = 0;
         for(int i=0;i < n;i++) {
@@ -87,5 +87,33 @@ public class No4 {
             }
         }
         return res;
-    }
+    }*/
+
+    //重写解法一，思考为何使用这种写法
+    //其实就是类似于一个滑动窗口，遍历每个可能的子
+    //数组，计算子数组中满足条件的数量，每个子循环
+    //中通过固定左边界，移动右边界的形式增量式的计
+    //算每个子数组中满足下标的数量
+    /*public int sumImbalanceNumbers(int[] nums) {
+        int n = nums.length;
+        int res = 0;
+        for(int i=0;i < n;i++) {
+            boolean[] set = new boolean[n+2];
+            set[nums[i]] = true;
+            int cnt = 0;
+            for(int j=i+1;j < n;j++) {
+                if(!set[nums[j]]) {
+                    set[nums[j]] = true;
+                    boolean f1 = set[nums[j]-1], f2 = set[nums[j]+1];
+                    if(f1 && f2) {
+                        cnt--;
+                    } if(!f1 && !f2) {
+                        cnt++;
+                    }
+                }
+                res += cnt;
+            }
+        }
+        return res;
+    }*/
 }
