@@ -116,4 +116,28 @@ public class No4 {
         }
         return res;
     }*/
+
+    //时隔多天再次重写解法一
+    public int sumImbalanceNumbers(int[] nums) {
+        int n = nums.length;
+        int res = 0;
+        for(int i=0;i < n;i++) {
+            boolean[] set = new boolean[1002];
+            set[nums[i]] = true;
+            int cnt = 0;
+            for(int j=i+1;j < n;j++) {
+                if(!set[nums[j]]) {
+                    set[nums[j]] = true;
+                    boolean f1 = set[nums[j]-1], f2 = set[nums[j]+1];
+                    if(f1 && f2) {
+                        cnt--;
+                    } else if(!f1 && !f2) {
+                        cnt++;
+                    }
+                }
+                res += cnt;
+            }
+        }
+        return res;
+    }
 }
