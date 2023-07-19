@@ -13,6 +13,11 @@ import java.util.Set;
 public class No3 {
     //最小代价怎么选？
     //dijkstra算法解法
+    //思考：为什么要用dijkstra算法？
+    //将起点和终点以及所有的特殊路径中的目标点取出来作为一个集合
+    //使用dijkstra算法生成起点到其他所有点的最小生成树，生成的
+    //过程中不断的更新到终点的距离，最终能够取到起点到终点的最短
+    //距离。
     public int minimumCost(int[] start, int[] target, int[][] specialRoads) {
         Map<Long,Integer> dis = new HashMap<>();
         Set<Long> vis = new HashSet<>();
