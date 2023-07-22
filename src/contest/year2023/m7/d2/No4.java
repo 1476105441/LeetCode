@@ -1,6 +1,7 @@
 package contest.year2023.m7.d2;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -118,7 +119,7 @@ public class No4 {
     }*/
 
     //时隔多天再次重写解法一
-    public int sumImbalanceNumbers(int[] nums) {
+    /*public int sumImbalanceNumbers(int[] nums) {
         int n = nums.length;
         int res = 0;
         for(int i=0;i < n;i++) {
@@ -139,5 +140,35 @@ public class No4 {
             }
         }
         return res;
+    }*/
+
+    //时隔多天总算看懂了解法二
+    //解法二：贡献法
+    //对于一个元素，只计算没有比它更小的元素的子数组的个数作为贡献（将整个模型简单化）。
+    //而整个问题又可以使用乘法原理进行简化，只计算包含当前元素的左右端点，而左右端点能够
+    //唯一确定一个子数组
+    public int sumImbalanceNumbers(int[] nums) {
+        int n = nums.length;
+        int[] right = new int[n];
+        int[] idx = new int[n+1];
+        int res = 0;
+        Arrays.fill(idx,n);
+        for(int i=n-1;i >= 0;i--) {
+            int x = nums[i];
+            //为什么右端点要把相同的值也排除掉？
+            //看[1,3,3,3,5]的例子就能够明白，去掉右端点是因为如果不去掉，后续在遍历
+            //到相同值的时候，就会产生重复的子数组，因为在计算左端点的时候没有排除相
+            //同值的元素
+            right[i] = Math.min(idx[x],idx[x-1]);
+            idx[x] = i;
+        }
+        Arrays.fill(idx,-1);
+        for(int i=0;i < n;i++) {
+            int x = nums[i];
+            //左端点的计算没有排除相同元素
+            res += (i-idx[x-1]) * (right[i]-i);
+            idx[x] = i;
+        }
+        return res - n*(n+1)/2;
     }
 }
