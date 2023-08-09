@@ -1,6 +1,8 @@
 package contest.year2023.m5.d14;
 
+import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Queue;
 
 /**
  * No2684.矩阵中移动的最大次数
@@ -33,8 +35,8 @@ public class No3 {
         return val + 1;
     }*/
 
-    //动态规划，16ms
-    public int maxMoves(int[][] grid) {
+    //解法一：动态规划，16ms
+    /*public int maxMoves(int[][] grid) {
         int m = grid.length;
         int n = grid[0].length;
         int[][] dp = new int[m][n];
@@ -59,6 +61,38 @@ public class No3 {
                     dp[j][i] = Math.max(dp[j][i],dp[j+1][i-1]+1);
                     res = Math.max(dp[j][i],res);
                 }
+            }
+        }
+        return res;
+    }*/
+
+    //解法二：bfs，8ms
+    public int maxMoves(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        boolean[][] set = new boolean[m][n];
+        Queue<int[]> queue = new ArrayDeque<>();
+        for(int i=0;i < m;i++) {
+            queue.add(new int[]{i,0});
+        }
+        int res = 0;
+        while(!queue.isEmpty()) {
+            int[] node = queue.poll();
+            int i = node[0],j = node[1];
+            res = Math.max(res,j);
+            if(j == n-1) {
+                continue;
+            }
+            if(i > 0 && grid[i-1][j+1] > grid[i][j] && !set[i-1][j+1]) {
+                set[i-1][j+1] = true;
+                queue.add(new int[]{i-1,j+1});
+            }
+            if(i < m-1 && grid[i+1][j+1] > grid[i][j] && !set[i+1][j+1]) {
+                set[i+1][j+1] = true;
+                queue.add(new int[]{i+1,j+1});
+            }
+            if(grid[i][j+1] > grid[i][j] && !set[i][j+1]) {
+                set[i][j+1] = true;
+                queue.add(new int[]{i,j+1});
             }
         }
         return res;
