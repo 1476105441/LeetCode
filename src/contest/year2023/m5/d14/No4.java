@@ -11,7 +11,7 @@ public class No4 {
     //怎么判断是否为完全连通分量呢？
     //使用并查集区分连通分量，然后不同的连通分量中遍历所有的元素，查看元素是否有到其他所有点的边存在
     //成功，11ms
-    public int countCompleteComponents(int n, int[][] edges) {
+    /*public int countCompleteComponents(int n, int[][] edges) {
         int m = edges.length;
         cnt = new int[n];
         parent = new int[n];
@@ -67,5 +67,48 @@ public class No4 {
         }
         parent[loc] = getParent(parent[loc]);
         return parent[loc];
+    }*/
+
+    //解法二：dfs
+    //连通分量中点的数量
+    private int v;
+    //连通分量中边的数量
+    private int e;
+    private boolean[] vis;
+    private List<List<Integer>> edg;
+    public int countCompleteComponents(int n, int[][] edges) {
+        vis = new boolean[n];
+        edg = new ArrayList<>();
+        for(int i=0;i < n;i++) {
+            edg.add(new ArrayList<>());
+        }
+        int m = edges.length;
+        for(int i=0;i < m;i++) {
+            int x = edges[i][0], y = edges[i][1];
+            edg.get(x).add(y);
+            edg.get(y).add(x);
+        }
+        int res = 0;
+        for(int i=0;i < n;i++) {
+            if(!vis[i]) {
+                dfs(i);
+                if(e == v * (v-1)) {
+                    res++;
+                }
+                e = 0;
+                v = 0;
+            }
+        }
+        return res;
+    }
+    private void dfs(int loc) {
+        vis[loc] = true;
+        v++;
+        e += edg.get(loc).size();
+        for(Integer next : edg.get(loc)) {
+            if(!vis[next]) {
+                dfs(next);
+            }
+        }
     }
 }
