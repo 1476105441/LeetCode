@@ -1,4 +1,4 @@
-package daily;
+package daily.year2023.m1;
 
 import java.util.HashMap;
 import java.util.Map;

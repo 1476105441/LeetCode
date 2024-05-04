@@ -1,4 +1,4 @@
-package daily;
+package daily.year2023.m1;
 
 public class M1D1 {
     //              将一维数组转变成二维数组

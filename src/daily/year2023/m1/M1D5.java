@@ -1,4 +1,4 @@
-package daily;
+package daily.year2023.m1;
 
 public class M1D5 {
     //              替换所有的问号
