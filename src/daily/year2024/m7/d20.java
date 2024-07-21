@@ -227,3 +227,32 @@ class Solution4 {
         diagonals2.remove(d2);
     }
 }
+
+//最优解决方案，使用bitSet替代HashSet
+class Solution {
+    //使用位运算
+    int res,n;
+    public int totalNQueens(int n) {
+        res = 0;
+        this.n = n;
+        dfsOccupy(n,0,0,0);
+        return res;
+    }
+    //参数分别表示：以及拜访的皇后的数量、列、斜边1（从左上到右下）、斜边2
+    private void dfsOccupy(int c,int colums,int inclined1,int inclined2) {
+        //int canOccupy = ~(colums | inclined1 | inclined2);
+        //重点注意此处，不能直接进行取反，必须要限定二进制位最多只能代表n位
+        int canOccupy = ((1 << n) - 1) & (~(colums | inclined1 | inclined2));
+        while(canOccupy != 0) {
+            //取出最低位
+            int lowbit = canOccupy & (-canOccupy);
+            //去掉最低位
+            canOccupy = canOccupy ^ lowbit;
+            if(c == 1) {
+                res++;
+            } else {
+                dfsOccupy(c-1,colums | lowbit,(inclined1 | lowbit) << 1,(inclined2 | lowbit) >>> 1);
+            }
+        }
+    }
+}
